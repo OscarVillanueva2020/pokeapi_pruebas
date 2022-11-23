@@ -1,0 +1,24 @@
+{
+  "name": "pokeapi_pruebas",
+  "version": "1.0.0",
+  "description": "api de pokemon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OscarVillanueva2020/pokeapi_pruebas.git"
+  },
+  "author": "oscar,nacho,pato",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OscarVillanueva2020/pokeapi_pruebas/issues"
+  },
+  "homepage": "https://github.com/OscarVillanueva2020/pokeapi_pruebas#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  }
+}
