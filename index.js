@@ -1,19 +1,34 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require("express");
+const { connectDB } = require('./config/db.config');
+const bodyParser = require("body-parser");
+const cors = require('cors');
+/* const pokemonModel = require("./routes/pokemon.routes"); */
+const pokemonModel = require("./model/pokemon.model");
 
-var app = express();
-var port = process.env.PORT || 3000;
+const app = express();
+app.use(cors());
+connectDB();
 
-// Convierte una petición recibida (POST-GET...) a objeto JSON
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
+// PORT
+const PORT = process.env.PORT || 4000;
 
-app.get('/', function(req, res){
-	res.status(200).send({
-		message: 'GET Home route working fine!'
-	});
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get("/", (req, res) => {
+  res.json({ message: "API Funcionando" });
 });
 
-app.listen(port, function(){
-	console.log(`Server running in http://localhost:${port}`);
+/**
+ * Router Middleware
+ * Router - /user/*
+ * Method - *
+ */
+
+app.use("/pokemon", pokemonModel);
+/* app.use("/subject", subject); */
+
+app.listen(PORT, (req, res) => {
+  console.log(`Servidor iniciado en puerto ${PORT}`);
 });
