@@ -1,18 +1,18 @@
-import express from 'express';
-
-const router = express.Router();
+const router = require("express").Router();
+const PokemonController = require("../controller/pokemon.controller");
 
 // all requests here already starts with '/pokemons'
-//send to: http://localhost:5000/pokemons
-router.get('/', getPokemonFunction);
+//send to: http://localhost:4000/pokemon/
 
-router.post('/', createPokemonFunction);
+router.post('/', PokemonController.createPokemon);
+
+router.get('/', PokemonController.getPokemons);
 
 // /pokemon/2 == request.params{id:2}
-router.get('/:id', getSinglePokemonFunction);
+router.get('/:id', PokemonController.getSinglePokemon);
 
-router.delete('/:id', deletePokemonFunction);
+// router.patch('/:id', PokemonController.updatePokemon);
 
-router.patch('/:id', updatePokemonFunction);
+// router.delete('/:id', PokemonController.deletePokemon);
 
-export default router;
+module.exports = router;

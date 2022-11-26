@@ -1,102 +1,132 @@
-import { v4 as uuidv4 } from 'uuid';
-import { defaultData } from './defaultData.js';
+// const { v4: uuidv4 } = require("uuid");
+const Pokemon = require("../model/pokemon.model");
 
-let pokemons = []
-pokemons = defaultData
+const createPokemon = (req, res) => {
+  // console.log(req.body);
+  const { name } = req.body;
+  const newPokemon = new Pokemon(req.body);
+  const newPokemonImg =
+    "https://img.pokemondb.net/artwork/large/" + name.toLowerCase() + ".jpg";
+  const newPokemonURL = "https://pokemondb.net/pokedex/" + name.toLowerCase();
 
-
-//Hacer modificación para que busque en la BD al pokemon o pokemons
-export const getPokemonFunction = (req, res) => {
-  console.log(pokemons);
-  res.send(pokemons);
-}
-
-export const createPokemonFunction = (req, res) => {
-  console.log(req.body);
-  const { name, heightInMeter, weightInKG } = req.body;
-
-
-  const newPokemon = req.body;
-  const newPokemonID = uuidv4();
-  const newPokemonImg = "https://img.pokemondb.net/artwork/large/" + name.toLowerCase() + ".jpg"
-  const newPokemonURL = "https://pokemondb.net/pokedex/" + name.toLowerCase()
-
-
-  const newPokemonWithID = {
-    ...newPokemon,
-    id: newPokemonID,
+  const newPokemonWithID = new Pokemon({
+    name: newPokemon.name,
+    heightInMeter: newPokemon.heightInMeter,
+    weightInKG: newPokemon.weightInKG,
     img: newPokemonImg,
-    url: newPokemonURL
-  };
-  pokemons.save(newPokemonWithID);
-  newPokemonWithID.save();
+    url: newPokemonURL,
+  });
 
-  res.send(`Pokemon ${newPokemon.name} has been captured to the database.`)
-}
+  newPokemonWithID.save().
+  then(() => {
+      res.status(201).json({
+        ok: true,
+        msg: `Pokemon ${newPokemon.name} has been captured to the database.`
+      });
+    })
+    .catch(() => {
+      res.status(500).json({
+        ok: false,
+        msg: "Create Pokemon failed",
+      });
+    });
+};
 
-export const getSinglePokemonFunction = (req, res) => {
-  console.log(req.params);
+const getPokemons = async (req, res) => {
+  Pokemon.find({}, "name")
+    .then((pokemons) => {
+      res.json({
+        ok: true,
+        pokemons,
+      });
+    })
+    .catch(() => {
+      res.json({
+        ok: false,
+        msg: "Get Pokemons failed",
+      });
+    });
+};
 
+const getSinglePokemon = (req, res) => {
+
+  // console.log(req.params);
   const { id } = req.params;
-  const foundPokemon = pokemons.find((pokemon) => pokemon.id === id);
 
-  res.send(foundPokemon);
-}
+  Pokemon.findById({_id: id})
+    .then((pokemon) => {
+      res.json({
+        ok: true,
+        pokemon,
+      });
+    })
+    .catch(() => {
+      res.json({
+        ok: false,
+        msg: `Get Pokemon ID: ${id} failed.`
+      });
+    });
+};
 
-export const deletePokemonFunction = (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  const idToDelete = id;
+// const updatePokemon = (req, res) => {
+//   const { id } = req.params;
+//   const { name, heightInMeter, weightInKG } = req.body;
 
-  const pokemonTobeDelete = pokemons.find((pokemon) => pokemon.id === idToDelete);
-  pokemons = pokemons.filter((pokemon) => pokemon.id !== idToDelete);
+//   console.log(req.body);
 
-  res.send(`pokemon with
-  \n id: ${idToDelete} 
-  \n name: ${pokemonTobeDelete.name} 
-  \n heightInMeter: ${pokemonTobeDelete.heightInMeter} 
-  \n weightInKG: ${pokemonTobeDelete.weightInKG} 
-  \n has been deleted from the database.`)
-}
+//   const idToBeUpdated = id;
+//   const newName = name;
+//   const newHeightInMeter = heightInMeter;
+//   const newWeightInKG = weightInKG;
 
-export const updatePokemonFunction = (req, res) => {
-  const { id } = req.params;
-  const { name, heightInMeter, weightInKG } = req.body;
+//   const pokemonToBeUpdated = Pokemon.find(
+//     (pokemon) => pokemon._id === idToBeUpdated
+//   );
 
-  console.log(req.body);
+//   if (newName) {
+//     pokemonToBeUpdated.name = newName;
 
-  const idToBeUpdated = id;
-  const newName = name;
-  const newHeightInMeter = heightInMeter;
-  const newWeightInKG = weightInKG;
+//     res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
+//     it now has a updated name ${pokemonToBeUpdated.name}`);
+//   }
 
+//   if (newHeightInMeter) {
+//     pokemonToBeUpdated.heightInMeter = newHeightInMeter;
 
-  const pokemonToBeUpdated = pokemons.find((pokemon) => pokemon.id === idToBeUpdated);
+//     res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
+//     it now has a updated last name ${pokemonToBeUpdated.heightInMeter}`);
+//   }
 
+//   if (newWeightInKG) {
+//     pokemonToBeUpdated.weightInKG = newWeightInKG;
 
-  if (newName) {
-    pokemonToBeUpdated.name = newName;
+//     res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
+//     it now has a updated age ${pokemonToBeUpdated.weightInKG}`);
+//   }
+// };
 
-    res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
-    it now has a updated name ${pokemonToBeUpdated.name}`);
-  };
+// const deletePokemon = (req, res) => {
+//   const { id } = req.params;
+//   console.log(id);
+//   const idToDelete = id;
 
-  if (newHeightInMeter) {
-    pokemonToBeUpdated.heightInMeter = newHeightInMeter;
+//   const pokemonTobeDelete = pokemons.find(
+//     (pokemon) => pokemon.id === idToDelete
+//   );
+//   pokemons = pokemons.filter((pokemon) => pokemon.id !== idToDelete);
 
-    res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
-    it now has a updated last name ${pokemonToBeUpdated.heightInMeter}`);
-  };
+//   res.send(`pokemon with
+//   \n id: ${idToDelete}
+//   \n name: ${pokemonTobeDelete.name}
+//   \n heightInMeter: ${pokemonTobeDelete.heightInMeter}
+//   \n weightInKG: ${pokemonTobeDelete.weightInKG}
+//   \n has been deleted from the database.`);
+// };
 
-  if (newWeightInKG) {
-    pokemonToBeUpdated.weightInKG = newWeightInKG;
-
-    res.send(`Pokemon with the id ${idToBeUpdated} has been updated.\n
-    it now has a updated age ${pokemonToBeUpdated.weightInKG}`);
-  };
-
-
-
-
-}
-
+module.exports = {
+  createPokemon,
+  getPokemons,
+  getSinglePokemon,
+  // updatePokemon,
+  // deletePokemon,
+};
