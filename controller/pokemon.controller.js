@@ -33,7 +33,7 @@ const createPokemon = (req, res) => {
 };
 
 const getPokemons = async (req, res) => {
-  Pokemon.find({}, "name")
+  Pokemon.find({}, "name heightInMeter weightInKG img url")
     .then((pokemons) => {
       res.json({
         ok: true,
