@@ -11,8 +11,4 @@ router.get('/', PokemonController.getPokemons);
 // /pokemon/2 == request.params{id:2}
 router.get('/:id', PokemonController.getSinglePokemon);
 
-// router.patch('/:id', PokemonController.updatePokemon);
-
-// router.delete('/:id', PokemonController.deletePokemon);
-
 module.exports = router;

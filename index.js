@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   res.json({ message: "API Funcionando" });
