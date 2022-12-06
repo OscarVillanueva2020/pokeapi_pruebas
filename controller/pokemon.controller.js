@@ -60,7 +60,7 @@ const getSinglePokemon = (req, res) => {
 
   Pokemon.findById({_id: id})
     .then((pokemon) => {
-      res.json({
+      res.status(200).json({
         ok: true,
         pokemon
       });
