@@ -42,19 +42,24 @@ const createPokemon = (req, res) => {
 };
 
 const getPokemons = async (req, res) => {
-  Pokemon.find({}, "name heightInMeter weightInKG img url")
-    .then((pokemons) => {
+  try {
+    const pokemons = Pokemon.find({}, "name heightInMeter weightInKG img url");
+    if(pokemons){
       res.status(200).json({
         ok: true,
         pokemons,
       });
-    })
-    .catch(() => {
-      res.status(500).json({
-        ok: false,
-        msg: "Get Pokemons failed",
+    }else{
+      res.status(404).json({
+        ok: "DB empty"
       });
+    }
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      msg: "Get Pokemons failed",
     });
+  }
 };
 
 const getSinglePokemon = (req, res) => {
