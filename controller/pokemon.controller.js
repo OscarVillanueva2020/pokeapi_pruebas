@@ -1,8 +1,6 @@
-// const { v4: uuidv4 } = require("uuid");
 const Pokemon = require("../model/pokemon.model");
 
 const createPokemon = (req, res) => {
-  // console.log(req.body);
   const { name } = req.body;
   const newPokemon = new Pokemon(req.body);
   const newPokemonImg =
@@ -48,7 +46,7 @@ const getPokemons = async (req, res) => {
       }
     })
     .catch(() => {
-      res.status(500).json({
+      res.json({
         ok: false,
         msg: "Get Pokemons failed",
       });
@@ -62,7 +60,7 @@ const getSinglePokemon = (req, res) => {
 
   Pokemon.findById({_id: id})
     .then((pokemon) => {
-      res.status(200).json({
+      res.json({
         ok: true,
         pokemon
       });

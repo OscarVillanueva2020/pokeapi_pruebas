@@ -8,7 +8,6 @@ router.post('/', PokemonController.createPokemon);
 
 router.get('/', PokemonController.getPokemons);
 
-// /pokemon/2 == request.params{id:2}
 router.get('/:id', PokemonController.getSinglePokemon);
 
 
